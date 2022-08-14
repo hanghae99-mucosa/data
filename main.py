@@ -13,10 +13,10 @@ if __name__ == "__main__":
     brand_class_list = brand_faker.create_brand_dataset(user_class_list, 100)
 
     # Category 생성
-    categroy_class_list = category_faker.create_catogory_dataset()
+    category_class_list = category_faker.create_catogory_dataset()
 
     # Product 1000개 생성
-    product_class_list = product_faker.create_product_dataset(brand_class_list, categroy_class_list, 1000)
+    product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 1000)
 
     # Order 100개 생성
     order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 100)
