@@ -13,7 +13,8 @@ def create_user_dataset(num):
     for i in range(1, num + 1):
         email = fake.unique.ascii_free_email()
         password = fake.sha256()
-        role = fake.random_element(elements=OrderedDict([("USER", 0.95), ("ADMIN", 0.05)]))
+        # USER가 0, ADMIN 1
+        role = fake.random_element(elements=OrderedDict([(0, 0.95), (1, 0.05)]))
         user = User(i, email, password, role)
         user_class_list.append(user)
 
@@ -26,9 +27,9 @@ if __name__ == "__main__":
     user_cnt = 0
     admin_cnt = 0
     for i in range(1000):
-        if user_class_list[i].role == "ADMIN":
+        if user_class_list[i].role == 1:
             admin_cnt += 1
-        if user_class_list[i].role == "USER":
+        if user_class_list[i].role == 0:
             user_cnt += 1
 
     print("일반 사용자 수 : ", user_cnt)

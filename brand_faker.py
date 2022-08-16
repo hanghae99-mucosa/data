@@ -27,7 +27,8 @@ def create_brand_dataset(user_class_list, num):
         if cnt == num:
             break
         user = fake.set_user_id_in_brand()
-        if(user.role == "ADMIN"):
+        # ADMIN : 1
+        if(user.role == 1):
             user_id = user.user_id
             name = fake.unique.name()
             brand = Brand(i, name, user_id)
