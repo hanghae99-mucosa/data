@@ -5,32 +5,53 @@ import user_faker
 import product_faker
 import brand_faker
 import category_faker
+import time
 
 fake = Faker('ko_KR')
 
+def logging_time(original_fn):
+    def wrapper_fn(*args, **kwargs):
+        start_time = time.time()
+        result = original_fn(*args, **kwargs)
+        end_time = time.time()
+        print("WorkingTime[{}]: {} sec".format(original_fn.__name__, end_time-start_time))
+        return result
+    return wrapper_fn
+
+@logging_time
 def create_restock_notification_dataset(user_class_list, product_class_list, num):
 
     restock_notification_class_list = []
 
-    order_user_id_provider = DynamicProvider(
-        provider_name="set_user_in_order",
-        elements=user_class_list,
+    # 동적 프로바이더 생성시 role이 USER인 User 클래스만 모아서 elements에 넣어주기
+    user_class_list_role_USER = []
+    for user_class in user_class_list:
+        # USER : 0, ADMIN : 1
+        if user_class.role == 0:
+            user_class_list_role_USER.append(user_class)
+
+    restock_user_id_provider = DynamicProvider(
+        provider_name="set_user_in_restock",
+        elements=user_class_list_role_USER,
     )
+    fake.add_provider(restock_user_id_provider)
 
-    fake.add_provider(order_user_id_provider)
+    # 동적 프로바이더 생성시 amount가 0인 Product 클래스만 모아서 elements에 넣어주기
+    product_class_list_amount_0 = []
+    for product_class in product_class_list:
+        if product_class.amount == 0:
+            product_class_list_amount_0.append(product_class)
 
-
-    order_product_id_provider = DynamicProvider(
-        provider_name="set_product_in_order",
-        elements=product_class_list,
+    restock_product_id_provider = DynamicProvider(
+        provider_name="set_product_in_restock",
+        elements=product_class_list_amount_0,
     )
-
-    fake.add_provider(order_product_id_provider)
+    fake.add_provider(restock_product_id_provider)
 
     for i in range(1, num + 1):
-        user_class = fake.set_user_in_order()
+        user_class = fake.set_user_in_restock()
         user_id = user_class.user_id
-        product_class = fake.set_product_in_order()
+        product_class = fake.set_product_in_restock()
         product_id = product_class.product_id
         alarm_flag = fake.boolean()
 
@@ -43,7 +64,7 @@ if __name__ == "__main__":
     
     user_class_list = user_faker.create_user_dataset(50)
 
-    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 100)
+    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 5000)
 
     categroy_class_list = category_faker.create_catogory_dataset()
 
