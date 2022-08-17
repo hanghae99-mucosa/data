@@ -4,9 +4,21 @@ from faker.providers import DynamicProvider
 import user_faker
 import brand_faker
 import category_faker
+import time
 
 fake = Faker('ko_KR')
 
+def logging_time(original_fn):
+    def wrapper_fn(*args, **kwargs):
+        start_time = time.time()
+        result = original_fn(*args, **kwargs)
+        end_time = time.time()
+        print("WorkingTime[{}]: {} sec".format(original_fn.__name__, end_time-start_time))
+        return result
+    return wrapper_fn
+
+
+@logging_time
 def create_product_dataset(brand_class_list, categroy_class_list, num):
 
     product_class_list = []
@@ -47,11 +59,14 @@ def create_product_dataset(brand_class_list, categroy_class_list, num):
             price = fake.pyint(min_value=5000000, max_value=10000000, step=1000)
 
         amount = fake.pyint(min_value=0, max_value=999)
-        review_num = fake.pyint(min_value=0, max_value=50000)
-        
+
         review_avg = round(fake.pyfloat(min_value=0, max_value=5), 1)
-        if (review_avg < 1):
+        if review_avg < 1:
             review_avg = 0
+
+        review_num = 0
+        if review_avg != 0:
+            review_num = fake.pyint(min_value=0, max_value=50000)
 
         product = Product(i, brand_id, name, thumbnail, category_id, price, amount, review_num, review_avg)
         product_class_list.append(product)
@@ -67,7 +82,7 @@ if __name__ == "__main__":
 
     categroy_class_list = category_faker.create_catogory_dataset()
 
-    product_class_list = create_product_dataset(brand_class_list, categroy_class_list, 1000)
+    product_class_list = create_product_dataset(brand_class_list, categroy_class_list, 1000000)
 
     range_1000_to_100000_cnt = 0
     range_100000_to_500000_cnt = 0
@@ -75,7 +90,6 @@ if __name__ == "__main__":
     range_1000000_to_5000000_cnt = 0
     range_5000000_to_10000000_cnt = 0
     for product in product_class_list:
-        print(product)
         price = product.price
         if 1000 <= price <= 100000:
             range_1000_to_100000_cnt += 1
