@@ -1,6 +1,7 @@
 from table.Product import Product
 from faker import Faker
 from faker.providers import DynamicProvider
+from product_name_provider import ProductProvider
 import user_faker
 import brand_faker
 import category_faker
@@ -42,23 +43,28 @@ def create_product_dataset(brand_class_list, categroy_class_list, num):
     for i in range(1, num + 1):
         brand_class = fake.set_brand_id_in_product()
         brand_id = brand_class.brand_id
-        name = fake.name()
+
         category_class = fake.set_category_id_in_product()
         category_id = category_class.category_id
 
         # 카테고리 별 thumbnail 생성
         thumbnail_dict = {
-            '상의': "/images/상의.png",
-            '바지': "/images/바지.png",
-            '아우터': "/images/아우터.png",
-            '원피스': "/images/원피스.png",
-            '스커트': "/images/스커트.png",
-            '스니커즈': "/images/스니커즈.png",
-            '신발': "/images/신발.png",
-            '가방': "/images/가방.png"
+            '상의': "/images/상의.jpg",
+            '바지': "/images/바지.jpg",
+            '아우터': "/images/아우터.jpg",
+            '원피스': "/images/원피스.jpg",
+            '스커트': "/images/스커트.jpg",
+            '스니커즈': "/images/스니커즈.jpg",
+            '신발': "/images/신발.jpg",
+            '가방': "/images/가방.jpg"
         }
         parent_category = category_class.parent_cateogory
         thumbnail = thumbnail_dict[categroy_class_list[parent_category-1].category]
+
+        # Product Provider를 등록 해서 name 랜덤 생성
+        fake.add_provider(ProductProvider)
+        category = categroy_class_list[parent_category - 1].category
+        name = fake.product_name(category)
 
         # 약 70% 20% 5% 3% 2% 비율로 max_value 지정
         if i <= num * 0.6:
@@ -97,16 +103,18 @@ if __name__ == "__main__":
 
     brand_class_list = brand_faker.create_brand_dataset(user_class_list, 100)
 
-    categroy_class_list = category_faker.create_catogory_dataset()
+    category_class_list = category_faker.create_catogory_dataset()
 
-    product_class_list = create_product_dataset(brand_class_list, categroy_class_list, 1000)
-
+    product_class_list = create_product_dataset(brand_class_list, category_class_list, 1000)
+    
+    product_name_list = []
     range_1000_to_100000_cnt = 0
     range_100000_to_500000_cnt = 0
     range_500000_to_1000000_cnt = 0
     range_1000000_to_5000000_cnt = 0
     range_5000000_to_10000000_cnt = 0
     for product in product_class_list:
+        product_name_list.append(product.name)
         price = product.price
         if 1000 <= price <= 100000:
             range_1000_to_100000_cnt += 1
@@ -119,11 +127,17 @@ if __name__ == "__main__":
         if 5000000 < price <= 10000000:
             range_5000000_to_10000000_cnt += 1
 
+    # 상품 가격 범위별 개수
     print("range_1000_to_100000_cnt : ", range_1000_to_100000_cnt)
     print("range_100000_to_500000_cnt : ", range_100000_to_500000_cnt)
     print("range_500000_to_1000000_cnt : ", range_500000_to_1000000_cnt)
     print("range_1000000_to_5000000_cnt : ", range_1000000_to_5000000_cnt)
     print("range_5000000_to_10000000_cnt : ", range_5000000_to_10000000_cnt)
+    
+    # 상품명 개수, 중복 제거 후 상품 개수 비교
+    product_name_list_set = list(set(product_name_list))
+    print("상품명 개수 : ", len(product_name_list))
+    print("중복 제거 후 상품 개수 : ", len(product_name_list_set))
 
     amount_0_cnt = 0
     for product in product_class_list:
