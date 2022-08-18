@@ -1,7 +1,8 @@
 from faker import Faker
-from product_name_provider import ProductProvider
+from customFaker import category_faker
+from customFaker.product_name_provider import ProductProvider
 from faker.providers import DynamicProvider
-import category_faker
+
 
 fake = Faker('ko_KR')
 fake.add_provider(ProductProvider)

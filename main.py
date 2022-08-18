@@ -1,19 +1,19 @@
+from customFaker.user_faker import UserFaker
+from customFaker.brand_faker import BrandFaker
+from customFaker.category_faker import CategoryFaker
+from customFaker.product_faker import ProductFaker
+from customFaker.order_faker import OrderFaker
+from customFaker.restock_notification_faker import RestockNotificationFaker
+from dotenv import load_dotenv
+from model.models import User
+from model.models import Brand
+from model.models import Category
+from model.models import Product
+from model.models import Order
+from model.models import RestockNotification
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import user_faker
-import brand_faker
-import category_faker
-import order_faker
-import product_faker
-import restock_notification_faker
-from models import User
-from models import Brand
-from models import Category
-from models import Product
-from models import Order
-from models import RestockNotification
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -32,7 +32,8 @@ if __name__ == "__main__":
     Session = sessionmaker(engine)
     session = Session()
 
-    #============== user table에 저장
+    print("#====== user table에 저장 ======#")
+    user_faker = UserFaker()
     user_class_list = user_faker.create_user_dataset(200)
     for user_class in user_class_list:
         user = User()
@@ -43,7 +44,8 @@ if __name__ == "__main__":
         session.commit()
 
 
-    #============== brand table에 저장
+    print("#====== brand table에 저장 ======#")
+    brand_faker = BrandFaker()
     brand_class_list = brand_faker.create_brand_dataset(user_class_list, 100)
     for brand_class in brand_class_list:
         brand = Brand()
@@ -53,7 +55,8 @@ if __name__ == "__main__":
         session.commit()
 
 
-    #============== category table에 저장
+    print("#====== category table에 저장 ======#")
+    category_faker = CategoryFaker()
     category_class_list = category_faker.create_catogory_dataset()
     for category_class in category_class_list:
         category = Category()
@@ -63,8 +66,9 @@ if __name__ == "__main__":
         session.commit()
 
 
-    #============== product table에 저장
+    print("#====== product table에 저장 ======#")
     # Product 1000개 생성
+    product_faker = ProductFaker()
     product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 1000)
     for product_class in product_class_list:
         product = Product()
@@ -80,8 +84,9 @@ if __name__ == "__main__":
         session.commit()
 
 
-    #============== order table에 저장
+    print("#====== order table에 저장 ======#")
     # Order 1000개 생성
+    order_faker = OrderFaker()
     order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 100)
     for order_class in order_class_list:
         order = Order()
@@ -94,8 +99,9 @@ if __name__ == "__main__":
         session.commit()
 
 
-    #============== restock_notification table에 저장
+    print("#====== restock_notification table에 저장 ======#")
     # Restock_Notification 100개 생성
+    restock_notification_faker = RestockNotificationFaker()
     restock_notification_class_list = restock_notification_faker.create_restock_notification_dataset(user_class_list, product_class_list, 100)
     for restock_notification_class in restock_notification_class_list:
         restock_notification = RestockNotification()
@@ -105,5 +111,6 @@ if __name__ == "__main__":
         session.add(restock_notification)
         session.commit()
 
+    print("모든 테이블 저장 완료!")
     # session 종료
     session.close()
