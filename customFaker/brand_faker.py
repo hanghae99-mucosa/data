@@ -49,10 +49,10 @@ class BrandFaker():
 
         brand_name_list = list(set(random_list))
 
-        for i in range(1, num + 1):
-            if len(brand_name_list) < i:
-                print("더이상 brand name이 없습니다.")
-            name = brand_name_list[i-1]
+        print(len(brand_name_list), "개의 brand가 생성되었습니다.")
+
+        for i, brand_name in enumerate(brand_name_list):
+            name = brand_name
 
             user = fake.set_user_id_in_brand()
             user_id = user.user_id
@@ -75,7 +75,7 @@ if __name__ == "__main__":
             user_class_list_role_ADMIN.append(user_class)
 
     brand_faker = BrandFaker()
-    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 1000)
+    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 10000)
 
     for brand in brand_class_list:
         print(brand)
