@@ -33,9 +33,9 @@ if __name__ == "__main__":
     session = Session()
 
     print("#====== user table에 저장 ======#")
-    # User 200명 생성
+    # User 10000명 생성
     user_faker = UserFaker()
-    user_class_list = user_faker.create_user_dataset(200)
+    user_class_list = user_faker.create_user_dataset(10000)
     for user_class in user_class_list:
         user = User()
         user.email = user_class.email
@@ -46,9 +46,9 @@ if __name__ == "__main__":
 
 
     print("#====== brand table에 저장 ======#")
-    # Brand 100개 생성
+    # Brand 5000개 생성
     brand_faker = BrandFaker()
-    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 100)
+    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 5000)
     for brand_class in brand_class_list:
         brand = Brand()
         brand.name = brand_class.name
@@ -69,9 +69,9 @@ if __name__ == "__main__":
 
 
     print("#====== product table에 저장 ======#")
-    # Product 1000개 생성
+    # Product 20,000,000개 생성
     product_faker = ProductFaker()
-    product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 1000)
+    product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 20000000)
     for product_class in product_class_list:
         product = Product()
         product.amount = product_class.amount
@@ -87,9 +87,9 @@ if __name__ == "__main__":
 
 
     print("#====== order table에 저장 ======#")
-    # Order 500개 생성
+    # Order 20,000,000개 생성
     order_faker = OrderFaker()
-    order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 500)
+    order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 20000000)
     for order_class in order_class_list:
         order = Order()
         order.created_at = order_class.createdAt
@@ -102,9 +102,9 @@ if __name__ == "__main__":
 
 
     print("#====== restock_notification table에 저장 ======#")
-    # Restock_Notification 300개 생성
+    # Restock_Notification 100,000개 생성
     restock_notification_faker = RestockNotificationFaker()
-    restock_notification_class_list = restock_notification_faker.create_restock_notification_dataset(user_class_list, product_class_list, 300)
+    restock_notification_class_list = restock_notification_faker.create_restock_notification_dataset(user_class_list, product_class_list, 100000)
     for restock_notification_class in restock_notification_class_list:
         restock_notification = RestockNotification()
         restock_notification.alarm_flag = restock_notification_class.alarm_flag
