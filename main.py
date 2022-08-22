@@ -14,7 +14,9 @@ from model.models import RestockNotification
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import pymysql
 
+pymysql.install_as_MySQLdb()
 load_dotenv()
 
 host = os.environ.get("HOST")
