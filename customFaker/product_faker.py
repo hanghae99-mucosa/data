@@ -58,7 +58,7 @@ class ProductFaker():
                 '신발': "/images/신발.jpg",
                 '가방': "/images/가방.jpg"
             }
-            parent_category = category_class.parent_cateogory
+            parent_category = category_class.parent_category
             thumbnail = thumbnail_dict[categroy_class_list[parent_category-1].category]
 
             # Product Provider를 등록 해서 name 랜덤 생성
