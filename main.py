@@ -25,7 +25,7 @@ username = os.environ.get("DB_USERNAME")
 database = os.environ.get("DATABASE")
 password = os.environ.get("PASSWORD")
 
-DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, port, database)
+DATABASE_PATH = 'mariadb://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, port, database)
 
 if __name__ == "__main__":
 
@@ -34,15 +34,14 @@ if __name__ == "__main__":
     Session = sessionmaker(engine)
     session = Session()
 
-    user_query = session.query(User).order_by(User.user_id)
-    user_class_list = user_query.all()
-
-    brand_query = session.query(Brand).order_by(Brand.brand_id)
-    brand_class_list = brand_query.all()
-
-    category_query = session.query(Category).order_by(Category.category_id)
-    category_class_list = category_query.all()
-
+    # user_query = session.query(User).order_by(User.user_id)
+    # user_class_list = user_query.all()
+    #
+    # brand_query = session.query(Brand).order_by(Brand.brand_id)
+    # brand_class_list = brand_query.all()
+    #
+    # category_query = session.query(Category).order_by(Category.category_id)
+    # category_class_list = category_query.all()
 
     print("#====== user table에 저장 ======#")
     # User 10000명 생성
@@ -54,19 +53,19 @@ if __name__ == "__main__":
         user.password = user_class.password
         user.role = user_class.role
         session.add(user)
-        session.commit()
+    session.commit()
 
 
     print("#====== brand table에 저장 ======#")
     # Brand 5000개 생성
     brand_faker = BrandFaker()
-    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 5000)
+    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 10000)
     for brand_class in brand_class_list:
         brand = Brand()
         brand.name = brand_class.name
         brand.user_id = brand_class.user_id
         session.add(brand)
-        session.commit()
+    session.commit()
 
 
     print("#====== category table에 저장 ======#")
@@ -77,25 +76,27 @@ if __name__ == "__main__":
         category.category = category_class.category
         category.parent_category = category_class.parent_cateogory
         session.add(category)
-        session.commit()
+    session.commit()
 
 
     print("#====== product table에 저장 ======#")
-    # Product 100,000개 생성
-    product_faker = ProductFaker()
-    product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 100000)
-    for product_class in product_class_list:
-        product = Product()
-        product.amount = product_class.amount
-        product.name = product_class.name
-        product.price = product_class.price
-        product.review_avg = product_class.review_avg
-        product.review_num = product_class.review_num
-        product.thumbnail = product_class.thumbnail
-        product.brand_id = product_class.brand_id
-        product.category_id = product_class.category_id
-        session.add(product)
-    session.commit()
+    for i in range(10):
+        # Product 1,000,000개 생성
+        product_faker = ProductFaker()
+        product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 100000)
+        for product_class in product_class_list:
+            product = Product()
+            product.amount = product_class.amount
+            product.name = product_class.name
+            product.price = product_class.price
+            product.review_avg = product_class.review_avg
+            product.review_num = product_class.review_num
+            product.thumbnail = product_class.thumbnail
+            product.brand_id = product_class.brand_id
+            product.category_id = product_class.category_id
+            session.add(product)
+        session.commit()
+        print(i + 1, "번 째 저장완료!")
 
 
     # print("#====== order table에 저장 ======#")
