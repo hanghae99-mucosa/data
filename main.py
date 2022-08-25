@@ -34,49 +34,49 @@ if __name__ == "__main__":
     Session = sessionmaker(engine)
     session = Session()
 
-    # user_query = session.query(User).order_by(User.user_id)
-    # user_class_list = user_query.all()
+    user_query = session.query(User).order_by(User.user_id)
+    user_class_list = user_query.all()
+
+    brand_query = session.query(Brand).order_by(Brand.brand_id)
+    brand_class_list = brand_query.all()
+
+    category_query = session.query(Category).order_by(Category.category_id)
+    category_class_list = category_query.all()
+
+    # print("#====== user table에 저장 ======#")
+    # # User 10000명 생성
+    # user_faker = UserFaker()
+    # user_class_list = user_faker.create_user_dataset(10000)
+    # for user_class in user_class_list:
+    #     user = User()
+    #     user.email = user_class.email
+    #     user.password = user_class.password
+    #     user.role = user_class.role
+    #     session.add(user)
+    # session.commit()
     #
-    # brand_query = session.query(Brand).order_by(Brand.brand_id)
-    # brand_class_list = brand_query.all()
     #
-    # category_query = session.query(Category).order_by(Category.category_id)
-    # category_class_list = category_query.all()
-
-    print("#====== user table에 저장 ======#")
-    # User 10000명 생성
-    user_faker = UserFaker()
-    user_class_list = user_faker.create_user_dataset(10000)
-    for user_class in user_class_list:
-        user = User()
-        user.email = user_class.email
-        user.password = user_class.password
-        user.role = user_class.role
-        session.add(user)
-    session.commit()
+    # print("#====== brand table에 저장 ======#")
+    # # Brand 5000개 생성
+    # brand_faker = BrandFaker()
+    # brand_class_list = brand_faker.create_brand_dataset(user_class_list, 10000)
+    # for brand_class in brand_class_list:
+    #     brand = Brand()
+    #     brand.name = brand_class.name
+    #     brand.user_id = brand_class.user_id
+    #     session.add(brand)
+    # session.commit()
 
 
-    print("#====== brand table에 저장 ======#")
-    # Brand 5000개 생성
-    brand_faker = BrandFaker()
-    brand_class_list = brand_faker.create_brand_dataset(user_class_list, 10000)
-    for brand_class in brand_class_list:
-        brand = Brand()
-        brand.name = brand_class.name
-        brand.user_id = brand_class.user_id
-        session.add(brand)
-    session.commit()
-
-
-    print("#====== category table에 저장 ======#")
-    category_faker = CategoryFaker()
-    category_class_list = category_faker.create_catogory_dataset()
-    for category_class in category_class_list:
-        category = Category()
-        category.category = category_class.category
-        category.parent_category = category_class.parent_cateogory
-        session.add(category)
-    session.commit()
+    # print("#====== category table에 저장 ======#")
+    # category_faker = CategoryFaker()
+    # category_class_list = category_faker.create_catogory_dataset()
+    # for category_class in category_class_list:
+    #     category = Category()
+    #     category.category = category_class.category
+    #     category.parent_category = category_class.parent_category
+    #     session.add(category)
+    # session.commit()
 
 
     print("#====== product table에 저장 ======#")
