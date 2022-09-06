@@ -3,7 +3,7 @@ from customFaker.brand_faker import BrandFaker
 from customFaker.category_faker import CategoryFaker
 from customFaker.product_faker import ProductFaker
 from customFaker.order_faker import OrderFaker
-from customFaker.restock_notification_faker import RestockNotificationFaker
+from customFaker.restock_notification_faker2 import RestockNotificationFaker
 from dotenv import load_dotenv
 from model.models import User
 from model.models import Brand
@@ -25,41 +25,48 @@ username = os.environ.get("DB_USERNAME")
 database = os.environ.get("DATABASE")
 password = os.environ.get("PASSWORD")
 
-DATABASE_PATH = 'mariadb://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, port, database)
+DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, port, database)
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, pool_size=40, echo=True, future=True)
+    engine = create_engine(DATABASE_PATH, echo=False, future=True)
 
     Session = sessionmaker(engine)
     session = Session()
 
-    user_query = session.query(User).order_by(User.user_id)
-    user_class_list = user_query.all()
+    # user_query = session.query(User).order_by(User.user_id)
+    # user_class_list = user_query.all()
 
-    brand_query = session.query(Brand).order_by(Brand.brand_id)
-    brand_class_list = brand_query.all()
-
-    category_query = session.query(Category).order_by(Category.category_id)
-    category_class_list = category_query.all()
-
-    # print("#====== user table에 저장 ======#")
-    # # User 10000명 생성
-    # user_faker = UserFaker()
-    # user_class_list = user_faker.create_user_dataset(10000)
-    # for user_class in user_class_list:
-    #     user = User()
-    #     user.email = user_class.email
-    #     user.password = user_class.password
-    #     user.role = user_class.role
-    #     session.add(user)
-    # session.commit()
+    # brand_query = session.query(Brand).order_by(Brand.brand_id)
+    # brand_class_list = brand_query.all()
     #
-    #
+    # category_query = session.query(Category).order_by(Category.category_id)
+    # category_class_list = category_query.all()
+
+    # product_query = session.query(Product).order_by(Product.product_id)
+    # product_class_list = product_query.all()
+
+    print("#====== user table에 저장 ======#")
+    # User 4,500,0000명 생성
+    for i in range(439):
+        user_faker = UserFaker()
+        user_query = session.query(User).order_by(User.user_id)
+        start = len(user_query.all()) + 1
+        user_class_list = user_faker.create_user_dataset(start, 10000)
+        for user_class in user_class_list:
+            user = User()
+            user.email = user_class.email
+            user.password = user_class.password
+            user.role = user_class.role
+            session.add(user)
+        session.commit()
+        print(i + 1, "번 째 저장완료!")
+
+
     # print("#====== brand table에 저장 ======#")
     # # Brand 5000개 생성
     # brand_faker = BrandFaker()
-    # brand_class_list = brand_faker.create_brand_dataset(user_class_list, 10000)
+    # brand_class_list = brand_faker.create_brand_dataset(user_class_list, 1000)
     # for brand_class in brand_class_list:
     #     brand = Brand()
     #     brand.name = brand_class.name
@@ -79,30 +86,30 @@ if __name__ == "__main__":
     # session.commit()
 
 
-    print("#====== product table에 저장 ======#")
-    for i in range(10):
-        # Product 1,000,000개 생성
-        product_faker = ProductFaker()
-        product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 100000)
-        for product_class in product_class_list:
-            product = Product()
-            product.amount = product_class.amount
-            product.name = product_class.name
-            product.price = product_class.price
-            product.review_avg = product_class.review_avg
-            product.review_num = product_class.review_num
-            product.thumbnail = product_class.thumbnail
-            product.brand_id = product_class.brand_id
-            product.category_id = product_class.category_id
-            session.add(product)
-        session.commit()
-        print(i + 1, "번 째 저장완료!")
+    # print("#====== product table에 저장 ======#")
+    # for i in range(1):
+    #     # Product 1,000,000개 생성
+    #     product_faker = ProductFaker()
+    #     product_class_list = product_faker.create_product_dataset(brand_class_list, category_class_list, 10000)
+    #     for product_class in product_class_list:
+    #         product = Product()
+    #         product.amount = product_class.amount
+    #         product.name = product_class.name
+    #         product.price = product_class.price
+    #         product.review_avg = product_class.review_avg
+    #         product.review_num = product_class.review_num
+    #         product.thumbnail = product_class.thumbnail
+    #         product.brand_id = product_class.brand_id
+    #         product.category_id = product_class.category_id
+    #         session.add(product)
+    #     session.commit()
+    #     print(i + 1, "번 째 저장완료!")
 
 
     # print("#====== order table에 저장 ======#")
     # # Order 20,000,000개 생성
     # order_faker = OrderFaker()
-    # order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 20000000)
+    # order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 10)
     # for order_class in order_class_list:
     #     order = Order()
     #     order.created_at = order_class.createdAt
@@ -111,20 +118,21 @@ if __name__ == "__main__":
     #     order.product_id = order_class.product_id
     #     order.user_id = order_class.user_id
     #     session.add(order)
-    #     session.commit()
-    #
-    #
+    # session.commit()
+
+
     # print("#====== restock_notification table에 저장 ======#")
     # # Restock_Notification 100,000개 생성
     # restock_notification_faker = RestockNotificationFaker()
-    # restock_notification_class_list = restock_notification_faker.create_restock_notification_dataset(user_class_list, product_class_list, 100000)
+    # restock_notification_class_list = restock_notification_faker.create_restock_notification_dataset(user_class_list, product_class_list, 1000)
     # for restock_notification_class in restock_notification_class_list:
     #     restock_notification = RestockNotification()
+    #     restock_notification.created_at = restock_notification_class.created_at
     #     restock_notification.alarm_flag = restock_notification_class.alarm_flag
     #     restock_notification.product_id = restock_notification_class.product_id
     #     restock_notification.user_id = restock_notification_class.user_id
     #     session.add(restock_notification)
-    #     session.commit()
+    # session.commit()
 
     print("모든 테이블 저장 완료!")
     # session 종료
