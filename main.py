@@ -3,7 +3,7 @@ from customFaker.brand_faker import BrandFaker
 from customFaker.category_faker import CategoryFaker
 from customFaker.product_faker import ProductFaker
 from customFaker.order_faker import OrderFaker
-from customFaker.restock_notification_faker2 import RestockNotificationFaker
+from customFaker.restock_notification_faker import RestockNotificationFaker
 from dotenv import load_dotenv
 from model.models import User
 from model.models import Brand
