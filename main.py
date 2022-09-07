@@ -31,7 +31,7 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, echo=True, future=True)
+    engine = create_engine(DATABASE_PATH, echo=False, future=True)
 
     Session = sessionmaker(engine)
     session = Session()
@@ -51,14 +51,14 @@ if __name__ == "__main__":
 
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(2196):
+    for i in range(428):
         user_faker = UserFaker()
         # user_query = session.query(User).order_by(User.user_id)
         # start_time = time.time()
         user_cnt = session.query(func.count(User.user_id)).scalar()
         start = user_cnt + 1
         # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
-        user_class_list = user_faker.create_user_dataset(start, 1000)
+        user_class_list = user_faker.create_user_dataset(start, 5000)
         for user_class in user_class_list:
             user = User()
             user.email = user_class.email
