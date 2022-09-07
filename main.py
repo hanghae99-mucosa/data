@@ -14,7 +14,9 @@ from model.models import RestockNotification
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func
 import pymysql
+import time
 
 pymysql.install_as_MySQLdb()
 load_dotenv()
@@ -46,12 +48,16 @@ if __name__ == "__main__":
     # product_query = session.query(Product).order_by(Product.product_id)
     # product_class_list = product_query.all()
 
+
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(3519):
+    for i in range(3513):
         user_faker = UserFaker()
-        user_query = session.query(User).order_by(User.user_id)
-        start = len(user_query.all()) + 1
+        # user_query = session.query(User).order_by(User.user_id)
+        # start_time = time.time()
+        user_cnt = session.query(func.count(User.user_id)).scalar()
+        start = user_cnt + 1
+        # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
         user_class_list = user_faker.create_user_dataset(start, 1000)
         for user_class in user_class_list:
             user = User()
