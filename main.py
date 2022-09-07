@@ -48,11 +48,11 @@ if __name__ == "__main__":
 
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(704):
+    for i in range(3519):
         user_faker = UserFaker()
         user_query = session.query(User).order_by(User.user_id)
         start = len(user_query.all()) + 1
-        user_class_list = user_faker.create_user_dataset(start, 5000)
+        user_class_list = user_faker.create_user_dataset(start, 1000)
         for user_class in user_class_list:
             user = User()
             user.email = user_class.email
