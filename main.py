@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(3513):
+    for i in range(2196):
         user_faker = UserFaker()
         # user_query = session.query(User).order_by(User.user_id)
         # start_time = time.time()
