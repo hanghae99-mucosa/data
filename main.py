@@ -15,7 +15,6 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import pymysql
-import time
 
 pymysql.install_as_MySQLdb()
 load_dotenv()
@@ -30,7 +29,7 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, echo=False, future=True)
+    engine = create_engine(DATABASE_PATH, echo=True, future=True)
 
     Session = sessionmaker(engine)
     session = Session()
@@ -49,8 +48,7 @@ if __name__ == "__main__":
 
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(812):
-        start = time.time()
+    for i in range(704):
         user_faker = UserFaker()
         user_query = session.query(User).order_by(User.user_id)
         start = len(user_query.all()) + 1
@@ -61,7 +59,6 @@ if __name__ == "__main__":
             user.password = user_class.password
             user.role = user_class.role
             session.add(user)
-        print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
         session.commit()
         print(i + 1, "번 째 저장완료!")
 
