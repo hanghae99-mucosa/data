@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     print("#====== user table에 저장 ======#")
     # User 4,500,0000명 생성
-    for i in range(428):
+    for i in range(224):
         user_faker = UserFaker()
         # user_query = session.query(User).order_by(User.user_id)
         # start_time = time.time()
@@ -67,6 +67,20 @@ if __name__ == "__main__":
             session.add(user)
         session.commit()
         print(i + 1, "번 째 저장완료!")
+    # 마지막 988개 저장
+    user_faker = UserFaker()
+    user_cnt = session.query(func.count(User.user_id)).scalar()
+    start = user_cnt + 1
+    # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
+    user_class_list = user_faker.create_user_dataset(start, 988)
+    for user_class in user_class_list:
+        user = User()
+        user.email = user_class.email
+        user.password = user_class.password
+        user.role = user_class.role
+        session.add(user)
+    session.commit()
+    print("224번 째 저장완료!")
 
 
     # print("#====== brand table에 저장 ======#")
