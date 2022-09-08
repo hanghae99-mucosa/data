@@ -36,51 +36,42 @@ if __name__ == "__main__":
     Session = sessionmaker(engine)
     session = Session()
 
-    # user_query = session.query(User).order_by(User.user_id)
-    # user_class_list = user_query.all()
+    print("user_query 실행")
+    user_query_start = time.time()  # 시작 시간 저장
+    user_query = session.query(User).order_by(User.user_id)
+    user_class_list = user_query.all()
+    print("user_query time :", time.time() - user_query_start)  # 현재시각 - 시작시간 = 실행 시간
 
     # brand_query = session.query(Brand).order_by(Brand.brand_id)
     # brand_class_list = brand_query.all()
     #
     # category_query = session.query(Category).order_by(Category.category_id)
     # category_class_list = category_query.all()
+    
+    print("product_query 실행")
+    product_query_start = time.time()  # 시작 시간 저장
+    product_query = session.query(Product).order_by(Product.product_id)
+    product_class_list = product_query.all()
+    print("product_query time :", time.time() - product_query_start)  # 현재시각 - 시작시간 = 실행 시간
 
-    # product_query = session.query(Product).order_by(Product.product_id)
-    # product_class_list = product_query.all()
-
-
-    print("#====== user table에 저장 ======#")
-    # User 4,500,0000명 생성
-    for i in range(224):
-        user_faker = UserFaker()
-        # user_query = session.query(User).order_by(User.user_id)
-        # start_time = time.time()
-        user_cnt = session.query(func.count(User.user_id)).scalar()
-        start = user_cnt + 1
-        # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
-        user_class_list = user_faker.create_user_dataset(start, 5000)
-        for user_class in user_class_list:
-            user = User()
-            user.email = user_class.email
-            user.password = user_class.password
-            user.role = user_class.role
-            session.add(user)
-        session.commit()
-        print(i + 1, "번 째 저장완료!")
-    # 마지막 988개 저장
-    user_faker = UserFaker()
-    user_cnt = session.query(func.count(User.user_id)).scalar()
-    start = user_cnt + 1
-    # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
-    user_class_list = user_faker.create_user_dataset(start, 988)
-    for user_class in user_class_list:
-        user = User()
-        user.email = user_class.email
-        user.password = user_class.password
-        user.role = user_class.role
-        session.add(user)
-    session.commit()
-    print("224번 째 저장완료!")
+    # print("#====== user table에 저장 ======#")
+    # # User 4,500,0000명 생성
+    # for i in range(224):
+    #     user_faker = UserFaker()
+    #     # user_query = session.query(User).order_by(User.user_id)
+    #     # start_time = time.time()
+    #     user_cnt = session.query(func.count(User.user_id)).scalar()
+    #     start = user_cnt + 1
+    #     # print("time :", time.time() - start_time)  # 현재시각 - 시작시간 = 실행 시간
+    #     user_class_list = user_faker.create_user_dataset(start, 5000)
+    #     for user_class in user_class_list:
+    #         user = User()
+    #         user.email = user_class.email
+    #         user.password = user_class.password
+    #         user.role = user_class.role
+    #         session.add(user)
+    #     session.commit()
+    #     print(i + 1, "번 째 저장완료!")
 
 
     # print("#====== brand table에 저장 ======#")
@@ -126,19 +117,24 @@ if __name__ == "__main__":
     #     print(i + 1, "번 째 저장완료!")
 
 
-    # print("#====== order table에 저장 ======#")
-    # # Order 20,000,000개 생성
-    # order_faker = OrderFaker()
-    # order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 10)
-    # for order_class in order_class_list:
-    #     order = Order()
-    #     order.created_at = order_class.createdAt
-    #     order.amount = order_class.amount
-    #     order.total_price = order_class.totalPrice
-    #     order.product_id = order_class.product_id
-    #     order.user_id = order_class.user_id
-    #     session.add(order)
-    # session.commit()
+    print("#====== order table에 저장 ======#")
+    # Order 35,000,000개 생성
+    for i in range(100):
+        order_faker = OrderFaker()
+        print("order_class_list 실행")
+        order_class_list_start = time.time()  # 시작 시간 저장
+        order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 10000)
+        print("5000개 order_class_list time :", time.time() - order_class_list_start)  # 현재시각 - 시작시간 = 실행 시간
+        for order_class in order_class_list:
+            order = Order()
+            order.created_at = order_class.createdAt
+            order.amount = order_class.amount
+            order.total_price = order_class.totalPrice
+            order.product_id = order_class.product_id
+            order.user_id = order_class.user_id
+            session.add(order)
+        session.commit()
+        print(i + 1, "번 째 저장완료!")
 
 
     # print("#====== restock_notification table에 저장 ======#")
