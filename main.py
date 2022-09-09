@@ -31,7 +31,7 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, echo=False, future=True)
+    engine = create_engine(DATABASE_PATH, echo=True, future=True)
 
     Session = sessionmaker(engine)
     session = Session()
