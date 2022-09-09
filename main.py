@@ -31,7 +31,7 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, pool_size=20, echo=True, future=True, encoding="utf-8", pool_recycle=3600)
+    engine = create_engine(DATABASE_PATH, pool_size=20, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
 
     Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     session = Session()
@@ -61,12 +61,16 @@ if __name__ == "__main__":
     #
     # category_query = session.query(Category).order_by(Category.category_id)
     # category_class_list = category_query.all()
-    
-    print("product_query 실행")
-    product_query_start = time.time()  # 시작 시간 저장
-    product_query = session.query(Product).order_by(Product.product_id)
-    product_class_list = product_query.all()
-    print("product_query time :", time.time() - product_query_start)  # 현재시각 - 시작시간 = 실행 시간
+
+    # try:
+    #     print("product_query 실행")
+    #     product_query_start = time.time()  # 시작 시간 저장
+    #     product_query = session.query(Product).order_by(Product.product_id)
+    #     product_id = product_query.get(1124564)
+    #     print("product_id : ", product_id.product_id)
+    #     print("product_query time :", time.time() - product_query_start)  # 현재시각 - 시작시간 = 실행 시간
+    # except :
+    #     print("예외 발생")
 
     # print("#====== user table에 저장 ======#")
     # # User 4,500,0000명 생성
@@ -133,12 +137,16 @@ if __name__ == "__main__":
     print("#====== order table에 저장 ======#")
     # Order 35,000,000개 생성
     user_class_list = []
+    product_class_list = []
     for i in range(100):
         order_faker = OrderFaker()
         print("order_class_list 실행")
         order_class_list_start = time.time()  # 시작 시간 저장
         order_class_list = order_faker.create_order_dataset(user_class_list, product_class_list, 10000)
-        print("5000개 order_class_list time :", time.time() - order_class_list_start)  # 현재시각 - 시작시간 = 실행 시간
+        print("10,000개 order_class_list time :", time.time() - order_class_list_start)  # 현재시각 - 시작시간 = 실행 시간
+
+        print("order_class_list for문 실행")
+        order_class_list_for_start = time.time()  # 시작 시간 저장
         for order_class in order_class_list:
             order = Order()
             order.created_at = order_class.createdAt
@@ -147,7 +155,12 @@ if __name__ == "__main__":
             order.product_id = order_class.product_id
             order.user_id = order_class.user_id
             session.add(order)
+        print("order_class_list for문 time :", time.time() - order_class_list_for_start)
+        
+        print("session commit 실행")
+        session_commit_start = time.time()
         session.commit()
+        print("session commit time :", time.time() - session_commit_start)
         print(i + 1, "번 째 저장완료!")
 
 

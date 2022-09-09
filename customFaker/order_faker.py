@@ -5,7 +5,24 @@ from customFaker.user_faker import UserFaker
 from customFaker.brand_faker import BrandFaker
 from customFaker.category_faker import CategoryFaker
 from customFaker.product_faker import ProductFaker
+from sqlalchemy import create_engine
+from model.models import Product
+from sqlalchemy.orm import scoped_session, sessionmaker
+from dotenv import load_dotenv
+import pymysql
 import time
+import os
+
+pymysql.install_as_MySQLdb()
+load_dotenv()
+
+host = os.environ.get("HOST")
+port = os.environ.get("PORT")
+username = os.environ.get("DB_USERNAME")
+database = os.environ.get("DATABASE")
+password = os.environ.get("PASSWORD")
+
+DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, port, database)
 
 fake = Faker('ko_KR')
 
@@ -21,6 +38,12 @@ def logging_time(original_fn):
 class OrderFaker():
     @logging_time
     def create_order_dataset(self, user_class_list, product_class_list, num):
+        engine = create_engine(DATABASE_PATH, pool_size=20, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
+        Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+        session = Session()
+
+        product_query = session.query(Product).order_by(Product.product_id)
+
         order_class_list = []
 
         # order_user_id_provider = DynamicProvider(
@@ -30,26 +53,32 @@ class OrderFaker():
         #
         # fake.add_provider(order_user_id_provider)
 
-        order_product_id_provider = DynamicProvider(
-            provider_name="set_product_in_order",
-            elements=product_class_list,
-        )
-
-        fake.add_provider(order_product_id_provider)
+        # order_product_id_provider = DynamicProvider(
+        #     provider_name="set_product_in_order",
+        #     elements=product_class_list,
+        # )
+        #
+        # fake.add_provider(order_product_id_provider)
 
         for i in range(1, num + 1):
-            # user_class = fake.set_user_in_order()
-            # user_id = user_class.user_id
-            user_id = fake.pyint(min_value=1, max_value=371942)
-            product_class = fake.set_product_in_order()
-            product_id = product_class.product_id
-            amount = fake.pyint(min_value=1, max_value=10)
-            product_price = product_class.price
-            total_price = amount * product_price
-            created_at = fake.date_time_between(start_date="-2y").isoformat("T", "auto")
+            try:
+                # user_class = fake.set_user_in_order()
+                # user_id = user_class.user_id
+                user_id = fake.pyint(min_value=1, max_value=371942)
+                # product_class = fake.set_product_in_order()
+                # product_id = product_class.product_id
+                product_id = fake.pyint(min_value=1, max_value=1124563)
+                amount = fake.pyint(min_value=1, max_value=10)
+                product_query = session.query(Product).order_by(Product.product_id)
+                product_class = product_query.get(product_id)
+                product_price = product_class.price
+                total_price = amount * product_price
+                created_at = fake.date_time_between(start_date="-2y").isoformat("T", "auto")
 
-            order = Order(i, user_id, product_id, amount, total_price, created_at)
-            order_class_list.append(order)
+                order = Order(i, user_id, product_id, amount, total_price, created_at)
+                order_class_list.append(order)
+            except:
+                continue
 
         return order_class_list
 
