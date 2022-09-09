@@ -23,12 +23,12 @@ class OrderFaker():
     def create_order_dataset(self, user_class_list, product_class_list, num):
         order_class_list = []
 
-        order_user_id_provider = DynamicProvider(
-            provider_name="set_user_in_order",
-            elements=user_class_list,
-        )
-
-        fake.add_provider(order_user_id_provider)
+        # order_user_id_provider = DynamicProvider(
+        #     provider_name="set_user_in_order",
+        #     elements=user_class_list,
+        # )
+        #
+        # fake.add_provider(order_user_id_provider)
 
         order_product_id_provider = DynamicProvider(
             provider_name="set_product_in_order",
@@ -38,8 +38,9 @@ class OrderFaker():
         fake.add_provider(order_product_id_provider)
 
         for i in range(1, num + 1):
-            user_class = fake.set_user_in_order()
-            user_id = user_class.user_id
+            # user_class = fake.set_user_in_order()
+            # user_id = user_class.user_id
+            user_id = fake.pyint(min_value=1, max_value=371942)
             product_class = fake.set_product_in_order()
             product_id = product_class.product_id
             amount = fake.pyint(min_value=1, max_value=10)

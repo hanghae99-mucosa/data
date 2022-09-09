@@ -36,11 +36,25 @@ if __name__ == "__main__":
     Session = sessionmaker(engine)
     session = Session()
 
-    print("user_query 실행")
-    user_query_start = time.time()  # 시작 시간 저장
-    user_query = session.query(User).order_by(User.user_id)
-    user_class_list = user_query.all()
-    print("user_query time :", time.time() - user_query_start)  # 현재시각 - 시작시간 = 실행 시간
+    # print("user_query 실행")
+    # user_query_start = time.time()  # 시작 시간 저장
+    # user_query = session.query(User).order_by(User.user_id)
+    # user_class_list = user_query.all()
+    # print("user_query time :", time.time() - user_query_start)  # 현재시각 - 시작시간 = 실행 시간
+
+    # print("num_list 실행")
+    # num_list_start = time.time()
+    # num_list = [i for i in range(1, 4501277)]
+    # print("num_list time :", time.time() - num_list_start)
+    #
+    # none_user_id_list = []
+    # print("user_class_list for문 실행")
+    # for_start = time.time()
+    # for user_class in user_class_list:
+    #     if user_class.user_id not in num_list:
+    #         none_user_id_list.append(user_class.user_id)
+    # print("user_class_list for문 time :", time.time() - for_start)
+
 
     # brand_query = session.query(Brand).order_by(Brand.brand_id)
     # brand_class_list = brand_query.all()
@@ -72,7 +86,6 @@ if __name__ == "__main__":
     #         session.add(user)
     #     session.commit()
     #     print(i + 1, "번 째 저장완료!")
-
 
     # print("#====== brand table에 저장 ======#")
     # # Brand 5000개 생성
@@ -119,6 +132,7 @@ if __name__ == "__main__":
 
     print("#====== order table에 저장 ======#")
     # Order 35,000,000개 생성
+    user_class_list = []
     for i in range(100):
         order_faker = OrderFaker()
         print("order_class_list 실행")
