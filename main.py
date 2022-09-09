@@ -138,7 +138,7 @@ if __name__ == "__main__":
     # Order 35,000,000개 생성
     user_class_list = []
     product_class_list = []
-    for i in range(100):
+    for i in range(663):
         order_faker = OrderFaker()
         print("order_class_list 실행")
         order_class_list_start = time.time()  # 시작 시간 저장
@@ -156,7 +156,7 @@ if __name__ == "__main__":
             order.user_id = order_class.user_id
             session.add(order)
         print("order_class_list for문 time :", time.time() - order_class_list_for_start)
-        
+
         print("session commit 실행")
         session_commit_start = time.time()
         session.commit()
