@@ -13,7 +13,7 @@ from model.models import Order
 from model.models import RestockNotification
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import func
 import pymysql
 import time
@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     engine = create_engine(DATABASE_PATH, pool_size=20, echo=True, future=True)
 
-    Session = sessionmaker(engine)
+    Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     session = Session()
 
     # print("user_query 실행")
