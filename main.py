@@ -31,7 +31,7 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
-    engine = create_engine(DATABASE_PATH, pool_size=20, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
+    engine = create_engine(DATABASE_PATH, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
 
     Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     session = Session()
