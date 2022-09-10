@@ -138,7 +138,7 @@ if __name__ == "__main__":
     # Order 35,000,000개 생성
     user_class_list = []
     product_class_list = []
-    for i in range(265):
+    for i in range(43):
         order_faker = OrderFaker()
         print("order_class_list 실행")
         order_class_list_start = time.time()  # 시작 시간 저장
