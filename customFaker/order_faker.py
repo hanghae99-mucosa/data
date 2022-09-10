@@ -77,7 +77,11 @@ class OrderFaker():
 
                 order = Order(i, user_id, product_id, amount, total_price, created_at)
                 order_class_list.append(order)
+                # session 종료
+                session.close()
             except:
+                # session 종료
+                session.close()
                 continue
 
         return order_class_list
