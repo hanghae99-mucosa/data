@@ -31,6 +31,11 @@ DATABASE_PATH = 'mysql://{0}:{1}@{2}:{3}/{4}'.format(username, password, host, p
 
 if __name__ == "__main__":
 
+    engine = create_engine(DATABASE_PATH, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
+
+    Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+    session = Session()
+
     # print("user_query 실행")
     # user_query_start = time.time()  # 시작 시간 저장
     # user_query = session.query(User).order_by(User.user_id)
@@ -134,11 +139,6 @@ if __name__ == "__main__":
     user_class_list = []
     product_class_list = []
     for i in range(60):
-        engine = create_engine(DATABASE_PATH, echo=False, future=True, encoding="utf-8", pool_recycle=3600)
-
-        Session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
-        session = Session()
-        
         order_faker = OrderFaker()
         print("order_class_list 실행")
         order_class_list_start = time.time()  # 시작 시간 저장
@@ -160,9 +160,6 @@ if __name__ == "__main__":
         print("session commit 실행")
         session_commit_start = time.time()
         session.commit()
-
-        # session 종료
-        session.close()
         print("session commit time :", time.time() - session_commit_start)
         print(i + 1, "번 째 저장완료!")
 
@@ -181,3 +178,5 @@ if __name__ == "__main__":
     # session.commit()
 
     print("모든 테이블 저장 완료!")
+    # session 종료
+    session.close()
